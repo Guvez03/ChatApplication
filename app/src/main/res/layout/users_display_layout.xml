@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/users_profile_image"
+            android:layout_width="90sp"
+            android:layout_height="90sp"
+            android:src="@drawable/profile_image"
+            ></de.hdodenhof.circleimageview.CircleImageView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/user_profil_name"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:text="username"
+                    android:layout_marginStart="3dp"
+                    android:textAlignment="textStart"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    ></TextView>
+
+                <ImageView
+                    android:id="@+id/user_online_status"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/online"
+                    android:visibility="invisible"
+                    ></ImageView>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/user_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="user status"
+                android:layout_marginStart="4dp"
+                android:textAlignment="textStart"
+                android:textSize="14dp"
+
+                ></TextView>
+            
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <Button
+                android:id="@+id/request_accept_btn"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_height="30dp"
+                android:text="Kabul Et"
+                android:layout_marginTop="3dp"
+                android:textSize="16sp"
+                android:visibility="invisible"
+                android:background="@color/colorAccent"
+                />
+            <Button
+                android:id="@+id/request_cancel_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:text="Reddet"
+                android:visibility="invisible"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                android:textSize="16sp"
+                android:background="@color/colorAccent"
+                >
+
+            </Button>
+
+
+
+
+
+            </LinearLayout>
+
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>
