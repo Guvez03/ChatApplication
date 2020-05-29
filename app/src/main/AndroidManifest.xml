@@ -17,15 +17,13 @@
             android:parentActivityName=".MainActivity"
             ></activity>
         <activity android:name=".ProfilToChatActivity" />
-        <activity
-            android:name=".FindFriendsActivity"
+        <activity android:name=".FindFriendsActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".GroupChatActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".ui.Anasayfa" />
-        <activity
-            android:name=".Profil"
+        <activity android:name=".Profil"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

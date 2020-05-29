@@ -2,6 +2,7 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,8 +25,10 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 public class LoginActivity extends AppCompatActivity {
     public EditText email;
+    Toolbar toolbar;
     public EditText password;
-    public Button sign__up_button,sign__in_button;
+    public Button sign__up_button;
+    private ImageButton sign__in_button;
     private FirebaseAuth mAuth;
     private ProgressDialog LoadingBar;
     private FirebaseUser user;
@@ -36,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
         email= findViewById(R.id.email);
         password = findViewById(R.id.password);
-        sign__in_button = findViewById(R.id.sign__up_button);
+        sign__in_button = findViewById(R.id.sign__in_button);
         sign__up_button = findViewById(R.id.sign__up_button);
         LoadingBar = new ProgressDialog(this);
 
@@ -46,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference(); // veritabanında bu referans işe işlemler yapabiliriz
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Profiles"); // veritabanında bu referans işe işlemler yapabiliriz
 
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if(user != null){
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);

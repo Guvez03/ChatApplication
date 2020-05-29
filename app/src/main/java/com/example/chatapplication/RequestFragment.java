@@ -199,7 +199,7 @@ FirebaseRecyclerAdapter<Contacts, RequestsViewHolder> adapter =
                 });
             } else if (type.equals("gönderilen")) {
                 Button request_sent_btn = holder.itemView.findViewById(R.id.request_accept_btn);
-                request_sent_btn.setText("İstek Gönderildi");
+                request_sent_btn.setText("Req Sent");
 
                 holder.itemView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
 

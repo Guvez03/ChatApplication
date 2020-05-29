@@ -3,68 +3,98 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@drawable/background"
     android:layout_height="match_parent"
     tools:context=".Profil">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="#ffffff"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/background"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        ></androidx.appcompat.widget.Toolbar>
 
-    <include
-        layout="@layout/toolbar"
-        android:id="@+id/settings_toolbar">
-
-    </include>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="40dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/radius"
+        android:orientation="vertical">
+    </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="250sp"
-        android:layout_height="250sp"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100sp"
         android:layout_marginEnd="65sp"
         android:layout_marginRight="65sp"
         android:src="@drawable/profile_image"
-        app:civ_border_color="@color/colorAccent"
-        app:civ_border_width="5sp"
+        app:civ_border_color="@color/colorPrimary"
+        app:civ_border_width="3sp"
        />
 
     <EditText
         android:id="@+id/username"
-        android:layout_width="244dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="249dp"
+        android:layout_below="@+id/profile_image"
+        android:drawableLeft="@drawable/edit_profile"
+        android:textSelectHandleLeft="@drawable/edit_profile"
+        android:gravity="center"
+        android:background="@drawable/textedit"
         android:hint="Kullanıcı Adınızı Giriniz !"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:padding="6dp"
+        android:textSize="24dp"
+        android:textAllCaps="true"
+        android:fontFamily="@font/opensans_bold"
+        android:layout_marginTop="10dp"
         android:inputType="textPersonName" />
-
-
     <EditText
         android:id="@+id/profile_durum"
-        android:layout_width="244dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginBottom="197dp"
+        android:layout_below="@+id/username"
+        android:textAlignment="center"
+        android:background="@drawable/textedit"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textSize="18dp"
+        android:padding="6dp"
+        android:fontFamily="@font/cabin_regular"
+        android:layout_marginTop="10dp"
+        android:drawableLeft="@drawable/edit_status"
         android:hint="Durum Giriniz !"
         android:inputType="textPersonName" />
 
     <Button
         android:id="@+id/kaydet_buton"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="552dp"
-        android:layout_marginRight="84dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@+id/profile_durum"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:padding="6dp"
+        android:fontFamily="@font/cabin_regular"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/button_backgroundiki"
         android:text="Güncelle"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/username"
         app:layout_constraintTop_toBottomOf="@+id/profile_durum" />
+
 </RelativeLayout>

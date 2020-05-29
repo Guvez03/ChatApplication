@@ -66,7 +66,7 @@ public class Profil extends AppCompatActivity
         InitializeFields();
 
 
-        username.setVisibility(View.INVISIBLE);
+        username.setVisibility(View.VISIBLE);
 
 
         kaydet_buton.setOnClickListener(new View.OnClickListener() {
@@ -103,12 +103,11 @@ public class Profil extends AppCompatActivity
         profile_image = (CircleImageView) findViewById(R.id.profile_image);
         loadingBar = new ProgressDialog(this);
 
-        settings_toolbar = findViewById(R.id.settings_toolbar);
+        settings_toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(settings_toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowCustomEnabled(true);
-        getSupportActionBar().setTitle("Hesap Ayarları");
-
+        getSupportActionBar().setTitle("PROFİL");
     }
 
 
@@ -160,51 +159,10 @@ public class Profil extends AppCompatActivity
                         });
                     }
                 });
-/*
-                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(Profil.this, "Profile Image uploaded Successfully...", Toast.LENGTH_SHORT).show();
 
-                            final String downloaedUrl = task.getResult().getStorage().getDownloadUrl().toString();
-
-                            RootRef.child("Profiles").child(currentUserID).child("userimageurl")
-                                    .setValue(downloaedUrl)
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task)
-                                        {
-                                            if (task.isSuccessful())
-                                            {
-                                                Toast.makeText(Profil.this, "Image save in Database, Successfully...", Toast.LENGTH_SHORT).show();
-                                                loadingBar.dismiss();
-                                            }
-                                            else
-                                            {
-                                                String message = task.getException().toString();
-                                                Toast.makeText(Profil.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                                                loadingBar.dismiss();
-                                            }
-                                        }
-                                    });
-                        }
-                        else
-                        {
-                            String message = task.getException().toString();
-                            Toast.makeText(Profil.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
-                        }
-                    }
-                });
-            }
-        }*/
             }
         }
     }
-
 
 
     private void UpdateSettings()

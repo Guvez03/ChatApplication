@@ -1,22 +1,30 @@
 package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +34,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.onesignal.OneSignal;
 import com.squareup.picasso.Picasso;
 
@@ -62,6 +73,11 @@ public class Chat2Activity extends AppCompatActivity {
     private FirebaseDatabase database;
     private String saveCurrentTime, saveCurrentDate;
     private Messages messages;
+    private String checker = "" , myUrl ="";
+    private Uri fileUri;
+    private StorageTask uploadTask;
+    private ProgressDialog loadingBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +112,48 @@ public class Chat2Activity extends AppCompatActivity {
             }
         });
 
+        SendFilesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CharSequence options[] = new CharSequence[]{
+
+                        "Images",
+                        "PDF Files",
+                        "Ms Word Files"
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(Chat2Activity.this);
+                builder.setTitle("Dosya Seçin");
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        if (i == 0){
+
+                            checker = "image";
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            intent.setType("image/*");
+                            startActivityForResult(intent.createChooser(intent,"Select Image"),438);
+                        }
+                        if (i == 1){
+
+                            checker = "pdf";
+
+
+                        }
+                        if (i ==2){
+
+                            checker = "docx";
+
+
+                        }
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
 
         DisplayLastSeen();
 
@@ -122,10 +180,9 @@ public class Chat2Activity extends AppCompatActivity {
 
             }
         });
+
+
     }
-
-
-
 
     private void IntializeControllers()
     {
@@ -145,7 +202,7 @@ public class Chat2Activity extends AppCompatActivity {
         userImage = (CircleImageView) findViewById(R.id.custom_profile_image);
 
         SendMessageButton = (ImageButton) findViewById(R.id.send_message_btn);
-        SendFilesButton = (ImageButton) findViewById(R.id.send_message_btn);
+        SendFilesButton = (ImageButton) findViewById(R.id.send_files);
         MessageInputText = (EditText) findViewById(R.id.input_message);
 
         messageAdapter = new MessageAdapter(messagesList);
@@ -154,6 +211,7 @@ public class Chat2Activity extends AppCompatActivity {
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messageAdapter);
 
+        loadingBar = new ProgressDialog(this);
 
         Calendar calendar = Calendar.getInstance();
 
@@ -164,7 +222,94 @@ public class Chat2Activity extends AppCompatActivity {
         saveCurrentTime = currentTime.format(calendar.getTime());
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
+        if(requestCode == 438  && resultCode == RESULT_OK && data != null && data.getData() != null ){
+            loadingBar.setTitle("Dosya Gönderiliyor");
+            loadingBar.setMessage("Lütfen bekleyin");
+            loadingBar.setCanceledOnTouchOutside(false);
+            loadingBar.show();
+            fileUri = data.getData();
+
+            if(!checker.equals("image")){
+
+            }
+            else if(checker.equals("image")){
+                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("Image Files");
+
+                final String messageSenderRef = "Messages/" + messageSenderID + "/" + messageReceiverID;
+                final String messageReceiverRef = "Messages/" + messageReceiverID + "/" + messageSenderID;
+
+                DatabaseReference userMessageKeyRef = RootRef.child("Messages")
+                        .child(messageSenderID).child(messageReceiverID).push();
+
+              final   String messagePushID = userMessageKeyRef.getKey();
+
+                final StorageReference filepath = storageReference.child(messagePushID + " ." + "jpg");
+
+                uploadTask = filepath.putFile(fileUri);
+
+                uploadTask.continueWithTask(new Continuation() {
+                    @Override
+                    public Object then(@NonNull Task task) throws Exception {
+
+                      if(!task.isSuccessful()){
+                          throw task.getException();
+                      }
+                        return filepath.getDownloadUrl();
+
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if(task.isSuccessful()){
+                            Uri downloadUri = task.getResult();
+                            myUrl = downloadUri.toString();
+
+                            Map messageTextBody = new HashMap();
+                            messageTextBody.put("message", myUrl);
+                            messageTextBody.put("name", fileUri.getLastPathSegment());
+                            messageTextBody.put("type", checker);
+                            messageTextBody.put("from", messageSenderID);
+                            messageTextBody.put("to", messageReceiverID);
+                            messageTextBody.put("messageID", messagePushID);
+                            messageTextBody.put("time", saveCurrentTime);
+                            messageTextBody.put("date", saveCurrentDate);
+
+                            Map messageBodyDetails = new HashMap();
+                            messageBodyDetails.put(messageSenderRef + "/" + messagePushID, messageTextBody);
+                            messageBodyDetails.put( messageReceiverRef + "/" + messagePushID, messageTextBody);
+
+                            RootRef.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                                @Override
+                                public void onComplete(@NonNull Task task)
+                                {
+                                    if (task.isSuccessful())
+                                    {
+                                        loadingBar.dismiss();
+                                        Toast.makeText(Chat2Activity.this, "Message Sent Successfully...", Toast.LENGTH_SHORT).show();
+                                    }
+                                    else
+                                    {
+                                        loadingBar.dismiss();
+                                        Toast.makeText(Chat2Activity.this, "Error", Toast.LENGTH_SHORT).show();
+                                    }
+                                    MessageInputText.setText("");
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+            else{
+                loadingBar.dismiss();
+                Toast.makeText(this,"Hiçbir şey Seçilmedi, HATA",Toast.LENGTH_LONG);
+            }
+
+        }
+    }
 
     private void DisplayLastSeen()
     {
@@ -310,4 +455,6 @@ public class Chat2Activity extends AppCompatActivity {
 
 
     }
+
+
 }

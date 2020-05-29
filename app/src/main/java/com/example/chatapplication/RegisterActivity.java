@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -24,10 +25,11 @@ import com.google.firebase.iid.FirebaseInstanceId;
 public class RegisterActivity extends AppCompatActivity {
   private  EditText register_email;
   private  EditText register_password;
-  private  EditText register_tel;
+  private  EditText username;
   private FirebaseAuth mAuth;
   private ProgressDialog LoadingBar;
   private DatabaseReference databaseReference;
+  private ImageButton signup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         register_email = findViewById(R.id.register_email);
         register_password = findViewById(R.id.register_password);
-        register_tel= findViewById(R.id.register_tel);
+        username= findViewById(R.id.username);
 
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mAuth.getCurrentUser();

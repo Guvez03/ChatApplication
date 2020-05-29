@@ -23,18 +23,25 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+
 public class MainActivity extends AppCompatActivity {
     public Toolbar mToolbar;
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private TabAccessorAdapter tabAccessorAdapter;
     private FirebaseAuth mAuth;
-    private FirebaseUser user;
     private DatabaseReference databaseReference;
+    private String currentUserID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -48,8 +55,21 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
 
         mAuth = FirebaseAuth.getInstance(); // firebase sınıfından yeni bir sınıf oluşturduk Verileri getirdik
-        user = mAuth.getCurrentUser(); // şuanki kullanıcı
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        updateUserStatus("online");
+    }
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+       FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (currentUser != null)
+        {
+            updateUserStatus("offline");
+        }
     }
 
     @Override
@@ -64,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
         if(item.getItemId() == R.id.signOut){
+            updateUserStatus("offline");
             mAuth.signOut();
             Intent logout = new Intent(MainActivity.this,LoginActivity.class);
             startActivity(logout);
@@ -133,6 +154,28 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void updateUserStatus(String state)
+    {
+        String saveCurrentTime, saveCurrentDate;
+
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, Object> onlineStateMap = new HashMap<>();
+        onlineStateMap.put("time", saveCurrentTime);
+        onlineStateMap.put("date", saveCurrentDate);
+        onlineStateMap.put("state", state);
+
+        databaseReference.child("Users").child(currentUserID).child("userState")
+                .updateChildren(onlineStateMap);
 
     }
 

@@ -2,6 +2,7 @@ package com.example.chatapplication;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.view.View;
@@ -31,6 +32,8 @@ public class ProfilToChatActivity extends AppCompatActivity {
      private CircleImageView visit_profile_image;
      private DatabaseReference UserRef,ChatRequestRef,ContactsRef,NotificationRef;
      private FirebaseAuth mAuth;
+     Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,8 @@ public class ProfilToChatActivity extends AppCompatActivity {
 
 
         receiverId = getIntent().getExtras().get("visituserıd").toString();
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
 
